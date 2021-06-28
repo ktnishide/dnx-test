@@ -68,4 +68,4 @@ PS: See the General Assumptions Section
 - No need to use an external database, just hold the data in memory.
 - No need to design the UI.
 - Ensure the app runs in docker is accessible through port `8000`. We'll test using it.
-- After you finish part 1, create a Pull Request and start part 2 from a new branch. Once you finish part 2, create another Pull Request.
+- After you finish part 1, create a Pull Request and start part 2 from a new branch. Once you finish part 2, create another Pull Request. To summarise, we expect to have one Pull Request for each part.
