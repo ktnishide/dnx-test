@@ -33,7 +33,7 @@ Just last week, millions of bubble teas have been sold in just a couple of days.
    
 So, the finance team decided they need to receive a monthly report to keep track of it.
 
-The backend service must expose an endpoint that returns the total numbers of orders + sum of the order price aggregated by store for a given month. 
+The backend service must expose an endpoint that returns the total numbers of orders and sum of the order price aggregated by store for a given month. 
   
 *Sample Request*:
 
