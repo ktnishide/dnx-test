@@ -15,7 +15,7 @@ To address this, they decided to automate this process.
 In order to do this, they want to build a Backend API to store the information coming from the POS systems.
 
 
-## Part 1 -  Saves orders
+## Part 1 -  Save orders
 
 Create a REST endpoint that saves orders coming from POS.
 
