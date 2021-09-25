@@ -13,5 +13,5 @@ To deploy on [Cloud Run](https://cloud.google.com/run), follow
 To run this server locally, run as follows:
 
 ```bash
-$ dart run bin/server.dart
+$ dart run lib/server.dart
 ```

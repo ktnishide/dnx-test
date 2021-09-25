@@ -11,17 +11,17 @@ RUN dart pub get
 COPY . .
 # Ensure packages are still up-to-date if anything has changed
 RUN dart pub get --offline
-RUN dart compile exe bin/server.dart -o bin/server
+RUN dart compile exe lib/server.dart -o lib/server
 
 # Build minimal serving image from AOT-compiled `/server` and required system
 # libraries and configuration files stored in `/runtime/` from the build stage.
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/bin/server /app/bin/
+COPY --from=build /app/lib/server /app/lib/
 
 # Include files in the /public directory to enable static asset handling
 COPY --from=build /app/public/ /public
 
 # Start server.
-EXPOSE 8080
-CMD ["/app/bin/server"]
+EXPOSE 8000
+CMD ["/app/lib/server"]

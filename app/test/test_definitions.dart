@@ -8,36 +8,97 @@ import 'package:test/test.dart';
 void runTests(
   void Function(String name, Future<void> Function(String host)) testServer,
 ) {
-  testServer('root', (host) async {
-    final response = await get(Uri.parse(host));
-    expect(response.statusCode, 200);
-    expect(response.body, contains('pkg:shelf example'));
-    expect(response.headers, contains('last-modified'));
-    expect(response.headers, contains('date'));
-    expect(response.headers, containsPair('content-type', 'text/html'));
-  });
+  group('Test group - order controller', () {
+    testServer('get ok', (host) async {
+      final response = await get(Uri.parse('$host/order/'));
+      expect(response.statusCode, 200);
+    });
 
-  testServer('time', (host) async {
-    final response = await get(Uri.parse('$host/time'));
-    expect(response.statusCode, 200);
-    final serverTime = DateTime.parse(response.body);
-    final now = DateTime.now();
-    expect(
-      serverTime.isAfter(now),
-      isFalse,
-      reason:
-          'Server time ($serverTime) should not be after current time ($now).',
-    );
-  });
+    testServer('post ok', (host) async {
+      final response = await post(
+        Uri.parse('$host/order/'),
+        body: {
+          "store_number": "1",
+          "order_number": "2",
+          "order_datetime": "2021-09-26T03:14:52.138946",
+          "flavours": "Brown Sugar",
+          "toppings": "tapioca pearls",
+          "amount_of_ice": "Full",
+          "total_order_price": "99.0"
+        },
+      );
+      expect(response.statusCode, 200);
+    });
 
-  testServer('404', (host) async {
-    var response = await get(Uri.parse('$host/not_here'));
-    expect(response.statusCode, 404);
-    expect(response.body, 'Route not found');
+    testServer('post NOK - Brown Sugar', (host) async {
+      final response = await post(
+        Uri.parse('$host/order/'),
+        body: {
+          "store_number": "1",
+          "order_number": "2",
+          "order_datetime": "2021-09-26T03:14:52.138946",
+          "flavours": "Brown Sugar",
+          "toppings": "tapioca pearls",
+          "amount_of_ice": "Half",
+          "total_order_price": "99.0"
+        },
+      );
+      expect(response.statusCode, 500);
+    });
+    testServer('post NOK - flavour', (host) async {
+      final response = await post(
+        Uri.parse('$host/order/'),
+        body: {
+          "store_number": "1",
+          "order_number": "2",
+          "order_datetime": "2021-09-26T03:14:52.138946",
+          "flavours": "xxx",
+          "toppings": "tapioca pearls",
+          "amount_of_ice": "Half",
+          "total_order_price": "99.0"
+        },
+      );
+      expect(response.statusCode, 500);
+      expect(response.body, contains('flavour'));
+    });
+    testServer('post NOK - toppings', (host) async {
+      final response = await post(
+        Uri.parse('$host/order/'),
+        body: {
+          "store_number": "1",
+          "order_number": "2",
+          "order_datetime": "2021-09-26T03:14:52.138946",
+          "flavours": "Brown Sugar",
+          "toppings": "xxx",
+          "amount_of_ice": "Half",
+          "total_order_price": "99.0"
+        },
+      );
+      expect(response.statusCode, 500);
+      expect(response.body, contains('topping'));
+    });
 
-    response = await post(Uri.parse(host));
-    // https://github.com/dart-lang/shelf_static/issues/53 - should 405
-    expect(response.statusCode, 200);
-    expect(response.body, contains('pkg:shelf example'));
+    testServer('post NOK - ice', (host) async {
+      final response = await post(
+        Uri.parse('$host/order/'),
+        body: {
+          "store_number": "1",
+          "order_number": "2",
+          "order_datetime": "2021-09-26T03:14:52.138946",
+          "flavours": "Brown Sugar",
+          "toppings": "Oreo",
+          "amount_of_ice": "xxxx",
+          "total_order_price": "99.0"
+        },
+      );
+      expect(response.statusCode, 500);
+      expect(response.body, contains('ice'));
+    });
+
+    testServer('404', (host) async {
+      var response = await get(Uri.parse('$host/not_here'));
+      expect(response.statusCode, 404);
+      expect(response.body, 'Route not found');
+    });
   });
 }
