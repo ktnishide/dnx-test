@@ -15,3 +15,34 @@ To run this server locally, run as follows:
 ```bash
 $ dart run lib/server.dart
 ```
+
+
+To run server tests locally, run as follows:
+
+```bash
+$ dart test
+```
+
+To build docker image, run as follows:
+
+```bash
+$ docker build -t <image name> .  
+```
+
+To run docker image, run as follows:
+
+```bash
+$ docker run --publish 8000:8000 bubble
+```
+
+Curl call examples:
+
+post order
+```bash
+$ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "store_number=1&order_number=1&flavours=brown sugar&toppings=tapioca pearls&amount_of_ice=Full&total_order_price=50.99" http://localhost:8000/order/
+```
+
+get report
+```bash
+$ curl -X GET http://localhost:8000/order/report?monthYear=2021-09
+```

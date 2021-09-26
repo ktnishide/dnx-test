@@ -17,10 +17,10 @@ RUN dart compile exe lib/server.dart -o lib/server
 # libraries and configuration files stored in `/runtime/` from the build stage.
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/lib/server /app/lib/
+COPY --from=build /app/lib/ /app/lib/
 
 # Include files in the /public directory to enable static asset handling
-COPY --from=build /app/public/ /public
+# COPY --from=build /app/public/ /public
 
 # Start server.
 EXPOSE 8000

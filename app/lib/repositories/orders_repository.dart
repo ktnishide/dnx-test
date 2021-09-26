@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'dart:io';
 
-import '../models/order.dart';
 import 'package:path/path.dart' as path;
 
+import '../models/order.dart';
+
 abstract class IOrdersRepository {
-  List getOrders();
+  List<Order> getOrders();
   void saveOrder(Order order);
 }
 
@@ -17,27 +17,25 @@ final ordersFile = File(
 class OrdersRepositoryFile extends IOrdersRepository {
   var orders = [];
   OrdersRepositoryFile() {
+    // initialize file
     if (!ordersFile.existsSync()) {
       ordersFile.createSync();
       ordersFile.writeAsStringSync('[]');
     }
-    var x = jsonDecode(ordersFile.readAsStringSync()) as List;
-    x.forEach((element) {
-      orders.add(Order.fromMapDynamic(element).toJson());
-    });
-    log('x');
+    // load file orders in memory
+    (jsonDecode(ordersFile.readAsStringSync()) as List).forEach(addOrders);
   }
 
+  void addOrders(element) => orders.add(Order.fromMapDynamic(element).toJson());
+
   @override
-  List getOrders() {
-    return jsonDecode(orders.toString());
-  }
+  List<Order> getOrders() =>
+      [...orders.map((e) => Order.fromMapDynamic(jsonDecode(e)))];
 
   @override
   void saveOrder(Order order) {
     orders.add(order.toJson());
     final content = orders.toString();
-    log(content);
     ordersFile.writeAsStringSync(content);
   }
 }

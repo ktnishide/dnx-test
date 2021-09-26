@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
 
-import 'package:container_server_example/shared/helpers.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import '../models/order.dart';
+import '../models/orders_report.dart';
 import '../repositories/orders_repository.dart';
+import '../shared/helpers.dart';
 
 class OrderController {
   OrderController(this.orderRepository);
@@ -20,8 +22,8 @@ class OrderController {
         order.validate();
         orderRepository.saveOrder(order);
         return Response.ok(order.toJson());
-      } catch (e) {
-        return Response.internalServerError(body: e.toString());
+      } catch (e, stack) {
+        return handleError(e, stack);
       }
     });
 
@@ -29,11 +31,32 @@ class OrderController {
       try {
         return Response.ok(json.encode(orderRepository.getOrders()),
             headers: {'Content-Type': 'application/json'});
-      } catch (e) {
-        return Response.internalServerError(body: e.toString());
+      } catch (e, stack) {
+        return handleError(e, stack);
+      }
+    });
+
+    router.get('/report<monthYear|.*>', (Request request) async {
+      try {
+        final monthYear = request.url.queryParameters['monthYear'] ?? '';
+        final orders = orderRepository.getOrders();
+
+        OrdersReport report = OrdersReport();
+
+        return Response.ok(
+            json.encode(report.generateReport(orders, monthYear).toJson()),
+            headers: {'Content-Type': 'application/json'});
+      } catch (e, stack) {
+        return handleError(e, stack);
       }
     });
 
     return router;
+  }
+
+  Response handleError(e, stack) {
+    log(e.toString());
+    log(stack.toString());
+    return Response.internalServerError(body: e.toString());
   }
 }
