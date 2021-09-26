@@ -46,3 +46,7 @@ get report
 ```bash
 $ curl -X GET http://localhost:8000/order/report?monthYear=2021-09
 ```
+
+
+Interesting...
+![image_size](image_size.png)
