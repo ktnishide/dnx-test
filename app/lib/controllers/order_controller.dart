@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:container_server_example/shared/helpers.dart';
+import '../shared/helpers.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
