@@ -100,5 +100,15 @@ void runTests(
       expect(response.statusCode, 404);
       expect(response.body, 'Route not found');
     });
+    testServer('report OK', (host) async {
+      var response =
+          await get(Uri.parse('$host/order/report?monthYear=2021-09'));
+      expect(response.statusCode, 200);
+    });
+    testServer('report NOK - date', (host) async {
+      var response =
+          await get(Uri.parse('$host/order/report?monthYear=2021-xx'));
+      expect(response.statusCode, 500);
+    });
   });
 }

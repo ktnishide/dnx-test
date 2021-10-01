@@ -124,16 +124,7 @@ class Order {
       throw 'unnexpected flavour: $flavours';
     }
 
-    toppings?.forEach((element) {
-      if (![
-        'TAPIOCA PEARLS',
-        'JELLY',
-        'CREAM TOP',
-        'OREO',
-      ].contains(element.trim().toUpperCase())) {
-        throw 'unnexpected toppings: ${toppings.toString()}';
-      }
-    });
+    toppings?.forEach(validateToppings);
 
     if (![
       'FULL',
@@ -149,8 +140,26 @@ class Order {
       if (toppings?.length != 1 ||
           toppings?[0].trim().toUpperCase() != 'TAPIOCA PEARLS' ||
           amountOfIce?.toUpperCase() != 'FULL') {
-        throw 'Invalid combination for Brown Sugar';
+        throw '''
+        Invalid combination for Brown Sugar, expected:
+        {
+          "flavours": "Brown Sugar",
+          "toppings": "tapioca pearls",
+          "amount_of_ice": "Full"
+        } 
+          ''';
       }
+    }
+  }
+
+  void validateToppings(element) {
+    if (![
+      'TAPIOCA PEARLS',
+      'JELLY',
+      'CREAM TOP',
+      'OREO',
+    ].contains(element.trim().toUpperCase())) {
+      throw 'unnexpected toppings: $element';
     }
   }
 }
