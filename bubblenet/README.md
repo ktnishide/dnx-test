@@ -1,7 +1,7 @@
 To run this server locally, run as follows:
 
 ```bash
-$ dotnet run --project AppDotNet.csproj
+$ dotnet run
 ```
 
 To build docker image, run as follows:

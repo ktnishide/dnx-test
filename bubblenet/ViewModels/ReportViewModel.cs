@@ -21,7 +21,7 @@ namespace AppDotNet.ViewModels
                 AddNotification(monthYear, $"Unnexpected monthYear: {monthYear}, expected: YYYY-MM");
                 return null;
             }
-            DateTime fDateTime = DateTime.Parse($"{monthYear}-01").AddMonths(1);
+            DateTime fDateTime = iDateTime.AddMonths(1);
 
 
 

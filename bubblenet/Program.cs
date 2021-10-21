@@ -1,5 +1,6 @@
 using AppDotNet.Data;
 using AppDotNet.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+await EnsureDb(app.Services, app.Logger);
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -40,3 +43,10 @@ app.MapGet("/v1/orders/report", (AppDbContext context, string monthYear) =>
 }).Produces<Report>();
 
 app.Run();
+
+async Task EnsureDb(IServiceProvider services, ILogger logger)
+{
+    using var db = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+    logger.LogInformation("Ensuring database exists and is up to date at connection string ", "Data Source=app.db;Cache=Shared");
+    await db.Database.MigrateAsync();
+}
