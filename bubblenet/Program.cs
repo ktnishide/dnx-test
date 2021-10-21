@@ -29,4 +29,14 @@ app.MapPost("/v1/orders", (AppDbContext context, CreateOrderViewModel model) =>
     return Results.Created($"/v1/orders/{order.Id}", order);
 });
 
+app.MapGet("/v1/orders/report", (AppDbContext context, string monthYear) =>
+{
+    var reportVM = new ReportViewModel();
+    var report = reportVM.Generate(monthYear, context);
+    if (!reportVM.IsValid)
+        return Results.BadRequest(reportVM.Notifications);
+
+    return report is not null ? Results.Ok(report) : Results.NoContent();
+}).Produces<Report>();
+
 app.Run();

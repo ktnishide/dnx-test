@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  appdotnet:
+    image: ${DOCKER_REGISTRY-}appdotnet
+    build:
+      context: .
+      dockerfile: ./Dockerfile
